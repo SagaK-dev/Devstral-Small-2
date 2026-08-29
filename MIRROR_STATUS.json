@@ -1,0 +1,19 @@
+{
+  "license_metadata": "apache-2.0",
+  "license_notice_present": true,
+  "model_id": "mistralai/Devstral-Small-2-24B-Instruct-2512",
+  "release_asset_count": 77,
+  "revision": "55c5b41e98c2dbd21b0c8afffc540dcfc9eb5128",
+  "sha256_checked_files": 10,
+  "status": "complete",
+  "upstream_file_count": 22,
+  "upstream_metadata_present": true,
+  "verification": {
+    "all_upstream_paths_present": true,
+    "release_part_sizes_match": true,
+    "upstream_sha256_checked_where_available": true
+  },
+  "verified_bytes": 51620249351,
+  "verified_file_count": 22,
+  "verified_part_count": 53
+}
