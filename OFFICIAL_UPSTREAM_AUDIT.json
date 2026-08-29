@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-08-29T02:37:00Z",
+  "checked_at_utc": "2026-08-29T03:39:00Z",
   "model": {
     "upstream": "mistralai/Devstral-Small-2-24B-Instruct-2512",
     "revision": "55c5b41e98c2dbd21b0c8afffc540dcfc9eb5128",
@@ -7,12 +7,25 @@
     "upstream_file_count": 22,
     "safetensors_files": 8,
     "reported_bytes": 51620249351,
-    "transfer": "in_progress",
+    "transfer": "complete",
     "release_tag": "upstream-55c5b41e98c2",
     "upstream_metadata_present": true,
     "license_notice_present": true,
-    "completed_mirror_jobs": 1,
-    "total_mirror_jobs": 22
+    "completed_mirror_jobs": 22,
+    "total_mirror_jobs": 22,
+    "verification": {
+      "status": "complete",
+      "verified_file_count": 22,
+      "verified_bytes": 51620249351,
+      "verified_part_count": 53,
+      "release_asset_count": 77,
+      "sha256_checked_files": 10,
+      "all_upstream_paths_present": true,
+      "release_part_sizes_match": true,
+      "upstream_sha256_checked_where_available": true
+    },
+    "current_upstream_main_short_revision": "55c5b41",
+    "current_upstream_matches_pinned_revision_prefix": true
   },
   "official_companion_source": {
     "mistralai/mistral-vibe": {
@@ -23,7 +36,9 @@
       "reported_bytes": 13275098,
       "verified_blob_count": 1387,
       "missing": 0,
-      "sha_mismatch": 0
+      "sha_mismatch": 0,
+      "current_main_commit": "50d99cf79b55ba92e43fa1ffdb0fc9c7bee83533",
+      "matches_current_main": true
     },
     "mistralai/mistral-common": {
       "commit": "208f15cf102c180363a489e96efc7b3bb8e5115b",
@@ -33,7 +48,9 @@
       "reported_bytes": 39236162,
       "verified_blob_count": 225,
       "missing": 0,
-      "sha_mismatch": 0
+      "sha_mismatch": 0,
+      "current_main_commit": "208f15cf102c180363a489e96efc7b3bb8e5115b",
+      "matches_current_main": true
     }
   }
 }
