@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-08-29T02:36:00Z",
+  "checked_at_utc": "2026-08-29T02:37:00Z",
   "model": {
     "upstream": "mistralai/Devstral-Small-2-24B-Instruct-2512",
     "revision": "55c5b41e98c2dbd21b0c8afffc540dcfc9eb5128",
@@ -7,10 +7,12 @@
     "upstream_file_count": 22,
     "safetensors_files": 8,
     "reported_bytes": 51620249351,
-    "transfer": "queued_after_prepare",
+    "transfer": "in_progress",
     "release_tag": "upstream-55c5b41e98c2",
     "upstream_metadata_present": true,
-    "license_notice_present": true
+    "license_notice_present": true,
+    "completed_mirror_jobs": 1,
+    "total_mirror_jobs": 22
   },
   "official_companion_source": {
     "mistralai/mistral-vibe": {
