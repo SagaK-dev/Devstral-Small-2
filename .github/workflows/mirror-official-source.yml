@@ -1,0 +1,116 @@
+name: Mirror official Devstral companion source
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "SOURCE_TRANSFER_TRIGGER.txt"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: devstral-small-2-official-source
+  cancel-in-progress: true
+
+env:
+  VIBE_REPO: "https://github.com/mistralai/mistral-vibe.git"
+  VIBE_SHA: "50d99cf79b55ba92e43fa1ffdb0fc9c7bee83533"
+  COMMON_REPO: "https://github.com/mistralai/mistral-common.git"
+  COMMON_SHA: "208f15cf102c180363a489e96efc7b3bb8e5115b"
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clone pinned official repositories
+        run: |
+          rm -rf /tmp/mistral-vibe /tmp/mistral-common
+          git clone "$VIBE_REPO" /tmp/mistral-vibe
+          git -C /tmp/mistral-vibe checkout --detach "$VIBE_SHA"
+          git clone "$COMMON_REPO" /tmp/mistral-common
+          git -C /tmp/mistral-common checkout --detach "$COMMON_SHA"
+
+      - name: Build source manifests
+        run: |
+          mkdir -p official-source
+          git -C /tmp/mistral-vibe ls-tree -r "$VIBE_SHA" > official-source/mistral-vibe.UPSTREAM_TREE.txt
+          git -C /tmp/mistral-common ls-tree -r "$COMMON_SHA" > official-source/mistral-common.UPSTREAM_TREE.txt
+          printf '%s\n' "$VIBE_SHA" > official-source/mistral-vibe.UPSTREAM_COMMIT.txt
+          printf '%s\n' "$COMMON_SHA" > official-source/mistral-common.UPSTREAM_COMMIT.txt
+          printf '%s\n' "$VIBE_REPO" > official-source/mistral-vibe.UPSTREAM_REPOSITORY.txt
+          printf '%s\n' "$COMMON_REPO" > official-source/mistral-common.UPSTREAM_REPOSITORY.txt
+
+      - name: Copy complete official source trees
+        run: |
+          rm -rf official-source/mistral-vibe official-source/mistral-common
+          mkdir -p official-source/mistral-vibe official-source/mistral-common
+          rsync -a --exclude='.git' /tmp/mistral-vibe/ official-source/mistral-vibe/
+          rsync -a --exclude='.git' /tmp/mistral-common/ official-source/mistral-common/
+
+      - name: Verify copied source file content against Git blobs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import os
+          from pathlib import Path
+
+          def git_blob_sha(path: Path) -> str:
+              data = path.read_bytes()
+              header = f"blob {len(data)}\0".encode()
+              return hashlib.sha1(header + data).hexdigest()
+
+          def check(manifest: Path, root: Path):
+              checked = 0
+              for line in manifest.read_text(encoding="utf-8").splitlines():
+                  meta, rel = line.split("\t", 1)
+                  mode, kind, sha = meta.split()
+                  if kind != "blob":
+                      continue
+                  p = root / rel
+                  if mode == "120000":
+                      target = os.readlink(p).encode()
+                      actual = hashlib.sha1(
+                          f"blob {len(target)}\0".encode() + target
+                      ).hexdigest()
+                  else:
+                      actual = git_blob_sha(p)
+                  if actual != sha:
+                      raise SystemExit(f"Blob mismatch: {p}: {actual} != {sha}")
+                  checked += 1
+              return checked
+
+          vibe = check(
+              Path("official-source/mistral-vibe.UPSTREAM_TREE.txt"),
+              Path("official-source/mistral-vibe"),
+          )
+          common = check(
+              Path("official-source/mistral-common.UPSTREAM_TREE.txt"),
+              Path("official-source/mistral-common"),
+          )
+          Path("official-source/SOURCE_VERIFICATION.txt").write_text(
+              f"mistral-vibe verified blobs: {vibe}\n"
+              f"mistral-common verified blobs: {common}\n"
+              "missing blobs: 0\n"
+              "sha mismatches: 0\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Commit pinned official source mirrors
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add official-source
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Mirror pinned official Devstral companion source"
+          git pull --rebase origin main
+          git push origin HEAD:main
