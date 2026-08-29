@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-08-29T02:30:00Z",
+  "checked_at_utc": "2026-08-29T02:34:00Z",
   "model": {
     "upstream": "mistralai/Devstral-Small-2-24B-Instruct-2512",
     "license_metadata": "apache-2.0",
@@ -10,12 +10,16 @@
     "mistralai/mistral-vibe": {
       "commit": "50d99cf79b55ba92e43fa1ffdb0fc9c7bee83533",
       "license": "Apache-2.0",
-      "mirror": "not_started"
+      "mirror": "not_started",
+      "upstream_blob_count": 1387,
+      "reported_bytes": 13275098
     },
     "mistralai/mistral-common": {
       "commit": "208f15cf102c180363a489e96efc7b3bb8e5115b",
       "license": "Apache-2.0",
-      "mirror": "not_started"
+      "mirror": "not_started",
+      "upstream_blob_count": 225,
+      "reported_bytes": 39236162
     }
   }
 }
